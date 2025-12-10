@@ -1,19 +1,19 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Pasien {
     int id;
-    static int counter = 1;
     String nama;
     String jenisKelamin;
     int usia;
     String alamat;
     String keluhan;
     String riwayat;
-    String waktuKedatangan;
+    LocalDateTime waktuKedatangan;
     int urgensi; // 1 = kritis, 2 = sedang, 3 = ringan
 
     public Pasien(int id, String nama, String jenisKelamin, int usia, String alamat, String keluhan, String riwayat,
-            String waktuKedatangan, int urgensi) {
+            LocalDateTime waktuKedatangan, int urgensi) {
         this.id = id;
         this.nama = nama;
         this.jenisKelamin = jenisKelamin;
@@ -26,8 +26,7 @@ public class Pasien {
     }
 
     public Pasien(String nama, String jenisKelamin, int usia, String alamat, String keluhan, String riwayat,
-            String waktuKedatangan, int urgensi) {
-        this.id = counter++;
+            LocalDateTime waktuKedatangan, int urgensi) {
         this.nama = nama;
         this.jenisKelamin = jenisKelamin;
         this.usia = usia;
@@ -36,14 +35,6 @@ public class Pasien {
         this.riwayat = riwayat;
         this.waktuKedatangan = waktuKedatangan;
         this.urgensi = urgensi;
-    }
-
-    public static void updateCounter(ArrayList<Pasien> list) {
-        int max = 0;
-        for (Pasien p : list) {
-            if (p.getId() > max) max = p.getId();
-        }
-        counter = max + 1;  // supaya tidak bentrok
     }
 
     public int getId() {
@@ -94,11 +85,11 @@ public class Pasien {
         this.riwayat = riwayat;
     }
 
-    public String getWaktuKedatangan() {
+    public LocalDateTime getWaktuKedatangan() {
         return waktuKedatangan;
     }
 
-    public void setWaktuKedatangan(String waktuKedatangan) {
+    public void setWaktuKedatangan(LocalDateTime waktuKedatangan) {
         this.waktuKedatangan = waktuKedatangan;
     }
 

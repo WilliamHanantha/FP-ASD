@@ -1,0 +1,13 @@
+id,nama,jenis_kelamin,umur,alamat,keluhan,riwayat,waktu_kedatangan,urgensi
+1,Andi Saputra,Laki-laki,34,"Jl. Kenangan No. 10",Sesak Nafas,Asma,2025-12-10 08:15:00,1
+2,Budi Hartono,Laki-laki,28,"Jl. Merdeka No. 5",Demam Tinggi,"Riwayat Tipes",2025-12-10 10:18:00,2
+3,Citra Lestari,Perempuan,22,"Jl. Mawar No. 3",Luka Robek,"Tidak ada",2025-12-10 12:20:00,3
+4,Dewi Anggraini,Perempuan,45,"Jl. Melati No. 8",Nyeri Dada,Jantung,2025-12-10 14:37:00,1
+5,Eko Prasetyo,Laki-laki,31,"Jl. Pinang No. 2",Pusing,Migrain,2025-12-10 14:25:00,3
+6,Fajar Nugroho,Laki-laki,27,"Jl. Cemara No. 11","Kecelakaan ringan","Tidak ada",2025-12-10 09:50:00,2
+7,Gita Maulida,Perempuan,19,"Jl. Flamboyan No. 4",Patah Tulang,"Riwayat cedera",2025-12-10 06:10:00,1
+8,Hari Santoso,Laki-laki,40,"Jl. Garuda No. 12","Batuk dan Flu","Asma Ringan",2025-12-10 18:44:00,3
+9,Indah Permata,Perempuan,29,"Jl. Anggrek No. 21","Mual dan Muntah",Lambung,2025-12-10 21:58:00,2
+10,Joko Priyono,Laki-laki,55,"Jl. Elang No. 7","Kehilangan Kesadaran",Hipertensi,2025-12-10 17:02:00,1
+11,Joko Widodo,Laki-laki,55,"Jl. Elang No. 7","Kehilangan Kesadaran",Hipertensi,2025-12-10 17:02:00,1
+12,Herman Willem Deandels,Laki - Laki,89,Belanda,difitnah tidak menggaji rakyat indonesia,sakit mental,2025-12-11 01:01:36,1

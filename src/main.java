@@ -1,10 +1,13 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Pasien> data = DummyData.getDataPasien();
+        ArrayList<Pasien> data = CsvLoader.loadPasien("src/Data_Pasien.csv");
+        // System.out.println("DATA LOADED: " + data.size());
 
         while (true) {
             System.out.println();
@@ -53,7 +56,7 @@ public class main {
                     } else if (filter == 2) {
                         System.out.println("ID: " + p.getId() +
                                 " | Nama: " + p.getNama() +
-                                " | Waktu Kedatangan: " + p.getWaktuKedatangan());
+                                " | Waktu Kedatangan: " + p.getWaktuKedatangan().toString().replace("T", " "));
                     } else if (filter == 3) {
                         System.out.println("ID: " + p.getId() +
                                 " | Nama: " + p.getNama() +
@@ -61,9 +64,9 @@ public class main {
                     }
                 }
             } else if (fungsi == 4) {
-
+                prioritasPasien(data, sc);
             } else if (fungsi == 5) {
-                System.out.println("Masukkan Data Pasien");
+                System.out.println("\nMasukkan Data Pasien");
 
                 System.out.print("Nama : ");
                 String nama = sc.nextLine();
@@ -73,7 +76,7 @@ public class main {
 
                 System.out.print("Usia : ");
                 int usia = sc.nextInt();
-                sc.nextLine(); // buang newline
+                sc.nextLine();
 
                 System.out.print("Alamat : ");
                 String alamat = sc.nextLine();
@@ -84,19 +87,38 @@ public class main {
                 System.out.print("Riwayat Penyakit : ");
                 String riwayat = sc.nextLine();
 
-                System.out.print("Waktu Kedatangan (HH:MM) : ");
-                String wk = sc.nextLine();
-
                 System.out.print("Urgensi (1-3) : ");
                 int urgensi = sc.nextInt();
-                sc.nextLine(); // buang newline (optional)
-                while (urgensi != 1 && urgensi != 2 && urgensi != 3) {
-                    System.out.print("Masukkan angka yang valid (1 - 3) : ");
+                sc.nextLine();
+
+                while (urgensi < 1 || urgensi > 3) {
+                    System.out.print("Masukkan urgensi valid (1-3): ");
                     urgensi = sc.nextInt();
-                    sc.nextLine(); // buang newline (optional)
+                    sc.nextLine();
                 }
-                data.add(new Pasien(nama, jk, usia, alamat, keluhan, riwayat, wk, urgensi));
-                System.out.println("Data pasien berhasil ditambahkan");
+
+                int id = generateNextId(data);
+
+                Pasien newPasien = new Pasien(
+                        id,
+                        nama,
+                        jk,
+                        usia,
+                        alamat,
+                        keluhan,
+                        riwayat,
+                        LocalDateTime.now(),
+                        urgensi);
+
+                data.add(newPasien);
+
+                try {
+                    CsvLoader.appendPasien("src/Data_Pasien.csv", newPasien);
+                    System.out.println("Pasien berhasil ditambahkan");
+                } catch (Exception e) {
+                    System.out.println("Gagal menambahkan pasien");
+                    e.printStackTrace();
+                }
 
             } else if (fungsi == 6) {
                 break;
@@ -187,19 +209,8 @@ public class main {
                 }
             } else if (filter == 2) {
                 for (int j = i + 1; j < n; j++) {
-                    String waktuKedatanganJ = list.get(j).getWaktuKedatangan();
-                    String[] bagianJ = waktuKedatanganJ.split(":");
-                    int jamJ = Integer.parseInt(bagianJ[0]);
-                    int menitJ = Integer.parseInt(bagianJ[1]);
-                    int jConverted = (jamJ * 60) + menitJ;
-
-                    String waktuKedatanganMin = list.get(indexMin).getWaktuKedatangan();
-                    String[] bagianMin = waktuKedatanganMin.split(":");
-                    int jamMin = Integer.parseInt(bagianMin[0]);
-                    int menitMin = Integer.parseInt(bagianMin[1]);
-                    int minConverted = (jamMin * 60) + menitMin;
-
-                    if (jConverted < minConverted) {
+                    if (list.get(j).getWaktuKedatangan()
+                            .isBefore(list.get(indexMin).getWaktuKedatangan())) {
                         indexMin = j;
                     }
                 }
@@ -217,4 +228,45 @@ public class main {
             list.set(indexMin, temp);
         }
     }
+
+    public static int generateNextId(ArrayList<Pasien> data) {
+        if (data.isEmpty())
+            return 1;
+        return data.get(data.size() - 1).getId() + 1;
+    }
+
+    public static void prioritasPasien(ArrayList<Pasien> data, Scanner sc) {
+
+        PriorityQueue<Pasien> pq = new PriorityQueue<>(
+                (a, b) -> {
+                    if (a.getUrgensi() != b.getUrgensi()) {
+                        return Integer.compare(a.getUrgensi(), b.getUrgensi());
+                    }
+                    return a.getWaktuKedatangan()
+                            .compareTo(b.getWaktuKedatangan());
+                });
+
+        pq.addAll(data);
+
+        if (pq.isEmpty()) {
+            System.out.println("Antrian kosong.");
+            return;
+        }
+
+        Pasien next = pq.peek();
+        System.out.println("\n=== Pasien urutan selanjutnya ===");
+        System.out.println(next.getNama() + " | Urgensi " + next.getUrgensi() + " | Waktu Kedatangan "
+                + next.getWaktuKedatangan().toString().replace("T", " "));
+
+        System.out.print("Sudah masuk IGD? (y/n): ");
+        String j = sc.nextLine();
+
+        if (j.equalsIgnoreCase("y")) {
+            pq.poll();
+            data.removeIf(p -> p.getId() == next.getId());
+            CsvLoader.savePasien(data);
+            System.out.println("Pasien masuk IGD & dihapus dari antrian.");
+        }
+    }
+
 }
