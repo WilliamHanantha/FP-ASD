@@ -240,7 +240,7 @@ public class Main {
         PriorityQueue<Pasien> pq = new PriorityQueue<>(
                 (a, b) -> {
                     if (a.getUrgensi() != b.getUrgensi()) {
-                        return Integer.compare(a.getUrgensi(), b.getUrgensi());
+                        return Integer.compare(a.getUrgensi(), b.getUrgensi()); 
                     }
                     return a.getWaktuKedatangan()
                             .compareTo(b.getWaktuKedatangan());
